@@ -57,13 +57,12 @@ const navItems = [
 export function BottomNav({ active, onNavigate }: BottomNavProps) {
   return (
     <div
-      className="absolute bottom-0 left-0 right-0 flex items-center justify-around"
+      className="absolute left-0 right-0 flex items-center justify-around bottom-nav"
       style={{
         background: "rgba(247,245,242,0.95)",
         backdropFilter: "blur(20px)",
         borderTop: "1px solid #E8E3DC",
-        padding: "10px 8px calc(24px + env(safe-area-inset-bottom))",
-        paddingBottom: "max(24px, env(safe-area-inset-bottom))",
+        padding: "10px 8px 24px",
         zIndex: 40,
       }}
     >

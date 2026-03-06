@@ -53,6 +53,17 @@ body {
   }
 }
 
+/* Bottom nav positioning - mobile gets offset, desktop stays at bottom */
+.bottom-nav {
+  bottom: 0;
+}
+
+@media (max-width: 767px) {
+  .bottom-nav {
+    bottom: 20px;
+  }
+}
+
 /* Desktop view - centered mobile viewport with nice background */
 @media (min-width: 768px) {
   body {
