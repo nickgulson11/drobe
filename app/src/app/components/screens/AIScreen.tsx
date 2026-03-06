@@ -73,27 +73,20 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
       {/* Header */}
       <div className="px-6 py-3">
         <div className="flex items-center justify-between mb-3">
-          <img src={logoImg} alt="Drobe" style={{ height: 48, width: "auto" }} />
+          <img src={logoImg} alt="Drobe" style={{ height: 58, width: "auto" }} />
           <div className="flex items-center gap-2">
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#C9A96E" }} />
             <p style={{ fontSize: 11, color: "#A0917E", fontWeight: 600, letterSpacing: "1.5px", textTransform: "uppercase" }}>
               AI Stylist
             </p>
           </div>
-          {/* Weather pill in header */}
-          <div
-            className="flex items-center gap-1.5"
-            style={{ background: "#1A1A1A", borderRadius: 100, padding: "5px 12px" }}
-          >
-            <span style={{ fontSize: 12 }}>⛅</span>
-            <span style={{ fontSize: 12, color: "#fff", fontWeight: 500 }}>14°</span>
-            <div style={{ width: 1, height: 10, background: "rgba(255,255,255,0.2)", margin: "0 2px" }} />
-            <span style={{ fontSize: 11, color: "rgba(255,255,255,0.55)" }}>London</span>
-          </div>
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 500, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
-          What are you<br />dressing for?
+        <h1 style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
+          Style AI
         </h1>
+        <p style={{ fontSize: 14, color: "#A0917E", marginTop: 4 }}>
+          What are you dressing for today?
+        </p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-5" style={{ paddingBottom: 100 }}>
@@ -108,9 +101,6 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
               <div className="flex-1">
                 <p style={{ fontSize: 12, color: "rgba(255,255,255,0.9)", fontWeight: 500 }}>Partly Cloudy · 14° · London</p>
                 <p style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", marginTop: 2 }}>Rain likely at 3pm · 18 km/h wind · Low 9°</p>
-              </div>
-              <div style={{ background: "rgba(201,169,110,0.15)", borderRadius: 8, padding: "4px 8px" }}>
-                <p style={{ fontSize: 10, color: "#C9A96E", fontWeight: 600, letterSpacing: "0.5px" }}>Factored in</p>
               </div>
             </div>
 
@@ -141,8 +131,7 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
                   lineHeight: 1.6,
                 }}
               />
-              <div className="flex items-center justify-between mt-2">
-                <p style={{ fontSize: 11, color: "#C4B8AA" }}>Weather · Location · Dress code</p>
+              <div className="flex items-center justify-end mt-2">
                 <button
                   onClick={() => handleSubmit(input || "Friend's wedding tomorrow")}
                   style={{

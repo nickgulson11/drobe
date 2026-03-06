@@ -62,8 +62,8 @@ export function OutfitPlannerScreen({ onNavigate }: OutfitPlannerScreenProps) {
 
       {/* Header */}
       <div className="px-6 py-4">
-        <img src={logoImg} alt="Drobe" style={{ height: 48, width: "auto", marginBottom: 12 }} />
-        <h1 style={{ fontSize: 28, fontWeight: 400, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2, marginBottom: 4 }}>
+        <img src={logoImg} alt="Drobe" style={{ height: 58, width: "auto", marginBottom: 12 }} />
+        <h1 style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2, marginBottom: 4 }}>
           Outfit Planner
         </h1>
         <p style={{ fontSize: 14, color: "#A0917E" }}>Plan ahead with confidence</p>

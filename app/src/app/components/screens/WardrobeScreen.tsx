@@ -64,10 +64,10 @@ export function WardrobeScreen({ onNavigate }: WardrobeScreenProps) {
 
       {/* Header */}
       <div className="px-6 py-3">
-        <img src={logoImg} alt="Drobe" style={{ height: 48, width: "auto", marginBottom: 12 }} />
+        <img src={logoImg} alt="Drobe" style={{ height: 58, width: "auto", marginBottom: 12 }} />
         <div className="flex items-center justify-between">
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif" }}>
+            <h1 style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
               My Wardrobe
             </h1>
             <p style={{ fontSize: 13, color: "#A0917E", fontWeight: 400, marginTop: 1 }}>

@@ -1,7 +1,7 @@
 # Drobe MVP - Project Status
 
-**Last Updated**: March 5, 2026
-**Status**: Core MVP Complete - Ready for Testing
+**Last Updated**: March 6, 2026
+**Status**: Edge Functions Deployed - Debugging Model Access
 
 ## Overview
 
@@ -129,24 +129,42 @@ OPENWEATHER_API_KEY=<your-key>
 6. ✅ Responsive mobile-first design
 
 ### What's Pending
-1. ⏳ Deploy Edge Functions for AI features
-   - `analyze-clothing` - Categorize uploaded items
-   - `suggest-outfits` - Generate outfit recommendations
-   - `get-weather` - Weather proxy (optional)
+1. ✅ Deploy Edge Functions for AI features - **DONE**
+   - ✅ `analyze-clothing` - Deployed to Supabase
+   - ✅ `suggest-outfits` - Deployed to Supabase
+   - ✅ `get-weather` - Deployed to Supabase
 
-2. ⏳ Add Anthropic API key for AI features
-3. ⏳ Add OpenWeatherMap API key for weather
-4. ⏳ Test full photo upload → AI analysis flow
-5. ⏳ Test outfit suggestion generation
+2. ✅ Add Anthropic API key for AI features - **DONE**
+3. ✅ Add OpenWeatherMap API key for weather - **DONE**
+4. 🐛 **DEBUGGING**: Claude API model access issue
+   - Edge Functions deployed but returning "model not found" errors
+   - Need to verify correct Claude model name and API tier access
+   - Tested models: `claude-3-5-sonnet-20241022`, `claude-3-5-sonnet-20240620` (both failed)
+5. ⏳ Test full photo upload → AI analysis flow - **Blocked by #4**
+6. ⏳ Test outfit suggestion generation - **Blocked by #4**
 
 ## Next Steps
 
-### Immediate (To Test Full MVP)
-1. Deploy Edge Functions to Supabase (see `docs/EDGE_FUNCTIONS_SETUP.md`)
-2. Add `ANTHROPIC_API_KEY` to Supabase Edge Function secrets
-3. Add `OPENWEATHER_API_KEY` to Supabase Edge Function secrets
-4. Test wardrobe photo upload with AI categorization
-5. Test outfit suggestions
+### Immediate (To Resume AI Debugging)
+1. **Check Anthropic Console** (https://console.anthropic.com/)
+   - Verify API key tier (free vs paid)
+   - Check which models are available to your account
+   - Verify sufficient credits
+
+2. **Try Alternative Models**
+   - Test with `claude-3-opus-20240229` (most reliable for vision)
+   - Or check Anthropic docs for current model names
+   - Update Edge Function with working model name
+
+3. **Test Edge Function**
+   - Use Supabase Dashboard → Edge Functions → Invoke
+   - Use test payload: `{"imageUrl": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800"}`
+   - Verify successful response before testing in app
+
+4. **Resume Full Testing**
+   - Once model issue resolved, test wardrobe photo upload
+   - Test AI categorization flow
+   - Test outfit suggestions
 
 ### Short Term Improvements
 - Add loading states and error handling UI
