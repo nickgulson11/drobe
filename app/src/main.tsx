@@ -5,6 +5,10 @@ import { AuthProvider } from './contexts/AuthContext';
 import { WardrobeProvider } from './contexts/WardrobeContext';
 import { OutfitProvider } from './contexts/OutfitContext';
 import { WeatherProvider } from './contexts/WeatherContext';
+import { initViewportFix } from './utils/viewport';
+
+// Initialize viewport fix for mobile browsers
+initViewportFix();
 
 createRoot(document.getElementById('root')!).render(
   <AuthProvider>
