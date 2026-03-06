@@ -15,19 +15,46 @@ export function useViewportOffset() {
         return;
       }
 
-      // Calculate the difference between window height and visual viewport height
-      // This gives us the browser chrome height
-      const windowHeight = window.innerHeight;
-      const viewportHeight = window.visualViewport?.height || windowHeight;
-      const chromeHeight = windowHeight - viewportHeight;
+      // On mobile, we need to account for browser chrome at the bottom
+      // Use innerHeight as the reference point
+      // When browser UI is visible, we want a larger offset
+      // When browser UI is hidden (scrolled away), we want less offset
 
-      // If browser chrome is visible (viewport smaller than window), use that value
-      // Otherwise, use a safe default based on typical browser chrome heights
-      if (chromeHeight > 10) {
-        setBottomOffset(chromeHeight);
+      // Check if visualViewport API is available
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
+        const windowHeight = window.innerHeight;
+        const screenHeight = window.screen.height;
+
+        // When viewport is smaller than window, browser chrome is taking up space
+        const chromeSpace = windowHeight - viewportHeight;
+
+        // Debug logging
+        console.log('Mobile viewport debug:', {
+          viewportHeight,
+          windowHeight,
+          screenHeight,
+          chromeSpace,
+          userAgent: navigator.userAgent.includes('Safari') ? 'Safari' : 'Chrome',
+        });
+
+        // We want the nav to sit just above where the content area ends
+        // Use a base offset + any chrome space detected
+        if (chromeSpace > 5) {
+          // Browser chrome is visible - add extra offset
+          const offset = Math.max(chromeSpace, 20);
+          console.log('Setting offset:', offset);
+          setBottomOffset(offset);
+        } else {
+          // Browser chrome is hidden or minimal
+          console.log('Setting offset: 10');
+          setBottomOffset(10);
+        }
       } else {
-        // When chrome is hidden (fullscreen), use small safe offset
-        setBottomOffset(10);
+        // Fallback for browsers without visualViewport API
+        // Use a safe default that works for most mobile browsers
+        console.log('No visualViewport API, using fallback: 60');
+        setBottomOffset(60);
       }
     };
 
