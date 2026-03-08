@@ -35,17 +35,22 @@ export function WardrobeScreen({ onNavigate }: WardrobeScreenProps) {
   };
 
   const handleAddPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    const { success, error } = await addItem(file);
     setShowAddDialog(false);
 
-    // Reset input so same file can be uploaded again
+    // Upload all files in parallel
+    const uploadPromises = Array.from(files).map(file => addItem(file));
+    const results = await Promise.all(uploadPromises);
+
+    // Reset input so same files can be uploaded again
     e.target.value = '';
 
-    if (!success) {
-      alert(error || 'Failed to add item');
+    // Check for any failures
+    const failures = results.filter(r => !r.success);
+    if (failures.length > 0) {
+      alert(`${failures.length} of ${files.length} uploads failed. Please try again.`);
     }
   };
 
@@ -376,7 +381,7 @@ export function WardrobeScreen({ onNavigate }: WardrobeScreenProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-              Add Item
+              Add Items
             </h3>
             <input
               type="file"
@@ -403,6 +408,7 @@ export function WardrobeScreen({ onNavigate }: WardrobeScreenProps) {
             <input
               type="file"
               accept="image/*"
+              multiple
               onChange={handleAddPhoto}
               style={{ display: "none" }}
               id="gallery-input"
@@ -420,6 +426,9 @@ export function WardrobeScreen({ onNavigate }: WardrobeScreenProps) {
             >
               Choose from Gallery
             </label>
+            <p style={{ fontSize: 12, color: "#A0917E", marginTop: 12, textAlign: "center" }}>
+              You can select multiple photos at once
+            </p>
           </div>
         </div>
       )}

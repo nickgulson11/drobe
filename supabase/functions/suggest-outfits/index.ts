@@ -86,6 +86,26 @@ Return JSON array:
 
 Return only valid JSON.`;
 
+    const requestBody = {
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 2048,
+      messages: [
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    };
+
+    console.log('====== SUGGEST-OUTFITS REQUEST ======');
+    console.log('Occasion:', occasion);
+    console.log('Weather:', weather);
+    console.log('Wardrobe Items Count:', wardrobeItems.length);
+    console.log('Wardrobe Items:', JSON.stringify(wardrobeItems, null, 2));
+    console.log('Generated Prompt:', prompt);
+    console.log('Full Request Body:', JSON.stringify(requestBody, null, 2));
+    console.log('======================================');
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -93,22 +113,14 @@ Return only valid JSON.`;
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 2048,
-        messages: [
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
 
-    // Log the full response for debugging
-    console.log('Claude API response:', JSON.stringify(data));
+    console.log('====== SUGGEST-OUTFITS RESPONSE ======');
+    console.log('Full Claude Response:', JSON.stringify(data, null, 2));
+    console.log('========================================');
 
     // Check if response has error
     if (data.error) {

@@ -41,30 +41,7 @@ serve(async (req) => {
       );
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': ANTHROPIC_API_KEY!,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 1024,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'image',
-                source: {
-                  type: 'url',
-                  url: imageUrl,
-                },
-              },
-              {
-                type: 'text',
-                text: `Analyze this clothing item and return a JSON object with:
+    const promptText = `Analyze this clothing item and return a JSON object with:
 - category: one of [tops, bottoms, outerwear, shoes, accessories]
 - subcategory: specific type (e.g., "t-shirt", "jeans", "blazer")
 - colors: array of color names
@@ -73,15 +50,52 @@ serve(async (req) => {
 - patterns: array of patterns (e.g., "solid", "striped", "floral")
 - style_notes: brief description
 
-Return only valid JSON, no markdown.`,
+Return only valid JSON, no markdown.`;
+
+    const requestBody = {
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 1024,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: {
+                type: 'url',
+                url: imageUrl,
               },
-            ],
-          },
-        ],
-      }),
+            },
+            {
+              type: 'text',
+              text: promptText,
+            },
+          ],
+        },
+      ],
+    };
+
+    console.log('====== ANALYZE-CLOTHING REQUEST ======');
+    console.log('Image URL:', imageUrl);
+    console.log('Prompt:', promptText);
+    console.log('Full Request Body:', JSON.stringify(requestBody, null, 2));
+    console.log('======================================');
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': ANTHROPIC_API_KEY!,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
     });
 
     const data = await response.json();
+
+    console.log('====== ANALYZE-CLOTHING RESPONSE ======');
+    console.log('Full Claude Response:', JSON.stringify(data, null, 2));
+    console.log('========================================');
 
     // Check if response has error
     if (data.error) {
