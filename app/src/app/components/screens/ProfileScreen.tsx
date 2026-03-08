@@ -54,7 +54,7 @@ export function ProfileScreen() {
       className="w-full h-full flex flex-col overflow-hidden"
       style={{ background: "#F7F5F2", fontFamily: "'DM Sans', sans-serif" }}
     >
-      <div style={{ height: 44 }} />
+      <div style={{ height: 16 }} />
 
       <div className="flex-1 overflow-y-auto" style={{ paddingBottom: 100 }}>
         {/* Header */}

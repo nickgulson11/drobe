@@ -58,7 +58,7 @@ export function OutfitPlannerScreen({ onNavigate }: OutfitPlannerScreenProps) {
       className="w-full h-full flex flex-col overflow-hidden"
       style={{ background: "#F7F5F2", fontFamily: "'DM Sans', sans-serif" }}
     >
-      <div style={{ height: 44 }} />
+      <div style={{ height: 16 }} />
 
       {/* Header */}
       <div className="px-6 py-4">

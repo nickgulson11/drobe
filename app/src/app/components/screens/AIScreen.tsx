@@ -49,21 +49,15 @@ interface AIScreenProps {
 export function AIScreen({ onNavigate }: AIScreenProps) {
   const { weather } = useWeather();
   const { items } = useWardrobe();
-  const { saveOutfit } = useOutfits();
+  const { outfits, saveOutfit, toggleFavorite: toggleOutfitFavorite } = useOutfits();
 
   const [input, setInput] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [activeQuery, setActiveQuery] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [savedOutfitIds, setSavedOutfitIds] = useState<Map<number, string>>(new Map());
   const [aiSuggestions, setAiSuggestions] = useState<OutfitSuggestion[]>([]);
   const [error, setError] = useState<string | null>(null);
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((fId) => fId !== id) : [...prev, id]
-    );
-  };
 
   const handleSubmit = async (query: string) => {
     setActiveQuery(query);
@@ -95,7 +89,7 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
       className="w-full h-full flex flex-col overflow-hidden"
       style={{ background: "#F7F5F2", fontFamily: "'DM Sans', sans-serif" }}
     >
-      <div style={{ height: 44 }} />
+      <div style={{ height: 16 }} />
 
       {/* Header */}
       <div className="px-6 py-3">
@@ -360,68 +354,16 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
                 className="mb-4 overflow-hidden"
                 style={{ background: "#fff", borderRadius: 20, border: idx === 0 ? "2px solid #C9A96E" : "1px solid #F0EDE8", padding: 16 }}
               >
-                {/* Header with title, star, and weather badge */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h3 style={{ fontSize: 18, fontFamily: "'Playfair Display', serif", fontWeight: 400, color: "#1A1A1A", marginBottom: 2 }}>{outfit.name}</h3>
-                    {idx === 0 && (
-                      <span style={{ fontSize: 10, fontWeight: 700, color: "#C9A96E", letterSpacing: "0.5px" }}>✦ TOP PICK</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={async () => {
-                        // Save outfit to database
-                        const itemIds = outfit.items.map(item => item.id);
-                        await saveOutfit(itemIds, outfit.name, outfit.occasion, outfit.reasoning, weather ? {
-                          temp: weather.temp,
-                          condition: weather.condition
-                        } : undefined);
-                        toggleFavorite(`ai-${idx}`);
-                      }}
-                      style={{
-                        background: favorites.includes(`ai-${idx}`) ? "#FFF9ED" : "#F7F5F2",
-                        border: favorites.includes(`ai-${idx}`) ? "1px solid #C9A96E" : "1px solid #E8E3DC",
-                        borderRadius: 10,
-                        padding: "6px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill={favorites.includes(`ai-${idx}`) ? "#C9A96E" : "none"}>
-                        <path d="M8 2.5L9.5 6.5H13.5L10.5 9L11.5 13L8 10.5L4.5 13L5.5 9L2.5 6.5H6.5L8 2.5Z" stroke="#C9A96E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </button>
-                    {weather && (
-                      <div
-                        style={{
-                          background: "#F7F5F2",
-                          border: "1px solid #E8E3DC",
-                          borderRadius: 100,
-                          padding: "4px 10px",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 4,
-                        }}
-                      >
-                        <span style={{ fontSize: 11 }}>
-                          {weather.icon === '01d' ? '☀️' : weather.icon === '01n' ? '🌙' :
-                           weather.icon.startsWith('02') ? '⛅' :
-                           weather.icon.startsWith('03') || weather.icon.startsWith('04') ? '☁️' :
-                           weather.icon.startsWith('09') || weather.icon.startsWith('10') ? '🌧️' :
-                           weather.icon.startsWith('11') ? '⛈️' :
-                           weather.icon.startsWith('13') ? '❄️' : '🌫️'}
-                        </span>
-                        <span style={{ fontSize: 11, color: "#1A1A1A", fontWeight: 500 }}>{weather.temp}°F</span>
-                      </div>
-                    )}
-                  </div>
+                {/* Header with title */}
+                <div className="mb-3">
+                  <h3 style={{ fontSize: 18, fontFamily: "'Playfair Display', serif", fontWeight: 400, color: "#1A1A1A", marginBottom: 2 }}>{outfit.name}</h3>
+                  {idx === 0 && (
+                    <span style={{ fontSize: 10, fontWeight: 700, color: "#C9A96E", letterSpacing: "0.5px" }}>✦ TOP PICK</span>
+                  )}
                 </div>
 
                 {/* Clothing items */}
-                <div className="flex flex-col gap-2 mb-3">
+                <div className="flex flex-col gap-2 mb-4">
                   {outfit.items.map((item, itemIdx) => (
                     <ClothingItem
                       key={itemIdx}
@@ -431,23 +373,72 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
                   ))}
                 </div>
 
-                {/* Reason */}
-                <p style={{ fontSize: 13, color: "#6B5E4E", lineHeight: 1.6, marginBottom: 12 }}>
-                  ✦ {outfit.reasoning}
-                </p>
-
+                {/* Add to Outfits Button */}
                 <button
+                  onClick={async () => {
+                    const itemIds = outfit.items.map(item => item.id);
+
+                    // Check if already saved
+                    let outfitId = savedOutfitIds.get(idx);
+
+                    if (!outfitId) {
+                      // Save outfit to database and get its ID
+                      const result = await saveOutfit(itemIds, outfit.name, outfit.occasion, outfit.reasoning, weather ? {
+                        temp: weather.temp,
+                        condition: weather.condition
+                      } : undefined);
+
+                      if (result.success && result.outfitId) {
+                        outfitId = result.outfitId;
+                        setSavedOutfitIds(prev => new Map(prev).set(idx, outfitId!));
+                      }
+                    }
+
+                    // Toggle favorite status
+                    if (outfitId) {
+                      await toggleOutfitFavorite(outfitId);
+                    }
+                  }}
                   style={{
                     width: "100%",
                     padding: "12px",
-                    borderRadius: 14,
-                    background: idx === 0 ? "#1A1A1A" : "#F7F5F2",
-                    color: idx === 0 ? "#fff" : "#1A1A1A",
+                    borderRadius: 12,
+                    background: (() => {
+                      const outfitId = savedOutfitIds.get(idx);
+                      const savedOutfit = outfitId ? outfits.find(o => o.id === outfitId) : null;
+                      return savedOutfit?.is_favorite ? "#C9A96E" : "#F7F5F2";
+                    })(),
+                    color: (() => {
+                      const outfitId = savedOutfitIds.get(idx);
+                      const savedOutfit = outfitId ? outfits.find(o => o.id === outfitId) : null;
+                      return savedOutfit?.is_favorite ? "#fff" : "#1A1A1A";
+                    })(),
+                    border: "1px solid #E8E3DC",
                     fontSize: 13,
                     fontWeight: 600,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 6,
                   }}
                 >
-                  {idx === 0 ? "Wear This" : "Try This Instead"}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill={(() => {
+                    const outfitId = savedOutfitIds.get(idx);
+                    const savedOutfit = outfitId ? outfits.find(o => o.id === outfitId) : null;
+                    return savedOutfit?.is_favorite ? "#fff" : "none";
+                  })()}>
+                    <path d="M8 2.5L9.5 6.5H13.5L10.5 9L11.5 13L8 10.5L4.5 13L5.5 9L2.5 6.5H6.5L8 2.5Z" stroke={(() => {
+                      const outfitId = savedOutfitIds.get(idx);
+                      const savedOutfit = outfitId ? outfits.find(o => o.id === outfitId) : null;
+                      return savedOutfit?.is_favorite ? "#fff" : "#C9A96E";
+                    })()} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {(() => {
+                    const outfitId = savedOutfitIds.get(idx);
+                    const savedOutfit = outfitId ? outfits.find(o => o.id === outfitId) : null;
+                    return savedOutfit?.is_favorite ? "Added to Outfits" : "Add to Outfits";
+                  })()}
                 </button>
               </div>
             ))}

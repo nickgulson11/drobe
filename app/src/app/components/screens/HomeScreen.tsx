@@ -131,7 +131,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
       style={{ background: "#F7F5F2", fontFamily: "'DM Sans', sans-serif" }}
     >
       {/* Status bar spacer */}
-      <div style={{ height: 44 }} />
+      <div style={{ height: 16 }} />
 
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3">

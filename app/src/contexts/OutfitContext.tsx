@@ -12,7 +12,7 @@ interface OutfitContextType {
     occasion?: string,
     aiReasoning?: string,
     weatherConditions?: Record<string, any>
-  ) => Promise<boolean>;
+  ) => Promise<{ success: boolean; outfitId?: string }>;
   toggleFavorite: (outfitId: string) => Promise<boolean>;
   deleteOutfit: (outfitId: string) => Promise<boolean>;
   refreshOutfits: () => Promise<void>;
@@ -45,8 +45,8 @@ export function OutfitProvider({ children }: { children: React.ReactNode }) {
     occasion?: string,
     aiReasoning?: string,
     weatherConditions?: Record<string, any>
-  ): Promise<boolean> => {
-    if (!user) return false;
+  ): Promise<{ success: boolean; outfitId?: string }> => {
+    if (!user) return { success: false };
 
     const { outfit } = await OutfitService.saveOutfit(
       user.id,
@@ -59,10 +59,10 @@ export function OutfitProvider({ children }: { children: React.ReactNode }) {
 
     if (outfit) {
       await refreshOutfits();
-      return true;
+      return { success: true, outfitId: outfit.id };
     }
 
-    return false;
+    return { success: false };
   };
 
   const toggleFavorite = async (outfitId: string): Promise<boolean> => {
