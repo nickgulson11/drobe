@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../contexts/AuthContext';
-import { useViewportOffset } from '../../../hooks/useViewportOffset';
 import logoImg from '../../../assets/logo.png';
 
 interface AuthScreenProps {
@@ -9,7 +8,6 @@ interface AuthScreenProps {
 
 export function AuthScreen({ onSuccess }: AuthScreenProps) {
   const { signIn, signUp } = useAuth();
-  const bottomOffset = useViewportOffset();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,8 +35,17 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
 
   return (
     <div
-      className="w-full h-full flex flex-col items-center justify-between relative overflow-hidden"
-      style={{ background: 'linear-gradient(160deg, #1a1a1a 0%, #2c2318 60%, #3d2e1a 100%)' }}
+      className="w-full flex flex-col items-center justify-center relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(160deg, #1a1a1a 0%, #2c2318 60%, #3d2e1a 100%)',
+        minHeight: '100vh',
+        minHeight: '100dvh', // Dynamic viewport height for mobile
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }}
     >
       {/* Background texture */}
       <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -47,10 +54,9 @@ export function AuthScreen({ onSuccess }: AuthScreenProps) {
         <div className="absolute bottom-40 right-5 w-72 h-72 rounded-full border border-[#C9A96E]" />
       </div>
 
-      {/* Top section */}
+      {/* Form section */}
       <div
-        className="flex-1 flex flex-col items-center justify-center px-8 w-full max-w-sm"
-        style={{ paddingBottom: `${bottomOffset + 20}px` }}
+        className="flex flex-col items-center justify-center px-8 w-full max-w-sm"
       >
         {/* Logo */}
         <div className="mb-8" style={{ width: 280 }}>
