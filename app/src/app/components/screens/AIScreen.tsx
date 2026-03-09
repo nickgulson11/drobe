@@ -6,6 +6,7 @@ import { useWeather } from "../../../contexts/WeatherContext";
 import { useWardrobe } from "../../../contexts/WardrobeContext";
 import { useOutfits } from "../../../contexts/OutfitContext";
 import { AIService, OutfitSuggestion } from "../../../services/ai";
+import { useViewportOffset } from "../../../hooks/useViewportOffset";
 
 const suggestions = [
   "Friend's wedding this Saturday",
@@ -50,6 +51,7 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
   const { weather } = useWeather();
   const { items } = useWardrobe();
   const { outfits, saveOutfit, toggleFavorite: toggleOutfitFavorite } = useOutfits();
+  const bottomOffset = useViewportOffset();
 
   const [input, setInput] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -102,15 +104,36 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
             </p>
           </div>
         </div>
-        <h1 style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
-          Style AI
-        </h1>
-        <p style={{ fontSize: 14, color: "#A0917E", marginTop: 4 }}>
-          What are you dressing for today?
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 style={{ fontSize: 24, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", lineHeight: 1.2 }}>
+              Style AI
+            </h1>
+            <p style={{ fontSize: 14, color: "#A0917E", marginTop: 4 }}>
+              What are you dressing for today?
+            </p>
+          </div>
+          {submitted && (
+            <button
+              onClick={() => { setSubmitted(false); setInput(""); setError(null); }}
+              style={{
+                padding: "8px 16px",
+                borderRadius: 12,
+                border: "1.5px solid #E8E3DC",
+                background: "#fff",
+                fontSize: 13,
+                color: "#1A1A1A",
+                fontWeight: 600,
+                flexShrink: 0
+              }}
+            >
+              Try Again
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-5" style={{ paddingBottom: 100 }}>
+      <div className="flex-1 overflow-y-auto px-5" style={{ paddingBottom: bottomOffset + 100 }}>
         {!submitted && !generating && (
           <>
             {/* Weather context card */}
@@ -442,13 +465,6 @@ export function AIScreen({ onNavigate }: AIScreenProps) {
                 </button>
               </div>
             ))}
-
-            <button
-              onClick={() => { setSubmitted(false); setInput(""); }}
-              style={{ width: "100%", padding: "14px", borderRadius: 16, border: "1.5px solid #E8E3DC", background: "transparent", fontSize: 14, color: "#6B5E4E", fontWeight: 500 }}
-            >
-              Try another occasion
-            </button>
           </>
         )}
       </div>

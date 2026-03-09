@@ -200,7 +200,7 @@ export function WardrobeScreen({ onNavigate }: WardrobeScreenProps) {
       )}
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto px-5 mt-4" style={{ paddingBottom: 100 }}>
+      <div className="flex-1 overflow-y-auto px-5 mt-4" style={{ paddingBottom: bottomOffset + 100 }}>
         {activeTab === "clothes" ? (
           <>
         {isLoading && items.length === 0 ? (

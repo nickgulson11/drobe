@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logoImg from "../../../assets/logo.png";
+import { useViewportOffset } from "../../../hooks/useViewportOffset";
 
 const plannedOutfits = [
   {
@@ -41,6 +42,7 @@ interface OutfitPlannerScreenProps {
 }
 
 export function OutfitPlannerScreen({ onNavigate }: OutfitPlannerScreenProps) {
+  const bottomOffset = useViewportOffset();
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [eventTitle, setEventTitle] = useState("");
   const [eventDate, setEventDate] = useState("");
@@ -69,7 +71,7 @@ export function OutfitPlannerScreen({ onNavigate }: OutfitPlannerScreenProps) {
         <p style={{ fontSize: 14, color: "#A0917E" }}>Plan ahead with confidence</p>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-6" style={{ paddingBottom: 100 }}>
+      <div className="flex-1 overflow-y-auto px-6" style={{ paddingBottom: bottomOffset + 100 }}>
         {/* This Week */}
         <div className="mb-6">
           <h2 style={{ fontSize: 16, fontWeight: 600, color: "#1A1A1A", marginBottom: 14 }}>This Week</h2>

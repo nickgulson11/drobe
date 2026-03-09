@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useViewportOffset } from "../../../hooks/useViewportOffset";
 
 const outfitImg = "https://images.unsplash.com/photo-1746458258548-5e5bd7225c9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHlsaXNoJTIwd29tYW4lMjBvdXRmaXQlMjBuZXV0cmFsJTIwdG9uZXN8ZW58MXx8fHwxNzcyNTU2MTQ1fDA&ixlib=rb-4.1.0&q=80&w=1080";
 
@@ -122,6 +123,7 @@ interface HomeScreenProps {
 }
 
 export function HomeScreen({ onNavigate }: HomeScreenProps) {
+  const bottomOffset = useViewportOffset();
   const [liked, setLiked] = useState(false);
   const [selectedOccasion, setSelectedOccasion] = useState("Today");
 
@@ -180,7 +182,7 @@ export function HomeScreen({ onNavigate }: HomeScreenProps) {
       </div>
 
       {/* Outfit card */}
-      <div className="flex-1 px-5 overflow-y-auto" style={{ paddingBottom: 100 }}>
+      <div className="flex-1 px-5 overflow-y-auto" style={{ paddingBottom: bottomOffset + 100 }}>
         <div
           className="relative overflow-hidden"
           style={{ borderRadius: 24, background: "#fff" }}

@@ -1,6 +1,6 @@
 # Drobe MVP - Project Status
 
-**Last Updated**: March 6, 2026 - 10:00 PM
+**Last Updated**: March 8, 2026 - 11:30 PM
 **Status**: ✅ MVP Complete - All Core Features Working
 
 ## Overview
@@ -69,16 +69,18 @@ Drobe is an AI-powered wardrobe management and outfit planning Progressive Web A
 - ✅ **WeatherContext** - Global weather state
 
 ### 6. UI Screens
-- ✅ **SplashScreen** - Welcome screen with branding (logo: 320px)
-- ✅ **AuthScreen** - Sign in/Sign up with toggle (logo: 280px)
-- ✅ **WardrobeScreen** - Display wardrobe items with photo upload (logo: 58px)
+- ✅ **AuthScreen** - Sign in/Sign up with toggle (logo: 280px) - Default landing page
+- ✅ **WardrobeScreen** - Clothes/Outfits tabs with photo upload (logo: 58px)
+  - Clothes tab: Grid/list view of wardrobe items with categories
+  - Outfits tab: Grid of favorite outfits with 2x2 item previews
 - ✅ **AIScreen** - AI stylist interface with "Style AI" title (logo: 58px)
+  - Simplified outfit cards with "Add to Outfits" button
 - ✅ **OutfitPlannerScreen** - Plan outfits for events (logo: 58px)
 - ✅ **ProfileScreen** - User profile with dynamic stats from contexts (logo: 58px)
 
-### 7. Recent Updates (March 6, 2026)
+### 7. Recent Updates
 
-**Morning Session:**
+**March 6, 2026 - Morning Session:**
 - ✅ Fixed all logo import paths (migrated from Figma assets to local)
 - ✅ Updated logo sizes to 58px across main screens for consistency
 - ✅ Connected UI to real backend services
@@ -102,7 +104,7 @@ Drobe is an AI-powered wardrobe management and outfit planning Progressive Web A
   - Desktop view shows centered mobile preview with background gradient
 - ✅ **Vercel deployment** configured with vercel.json
 
-**Evening Session (AI Integration):**
+**March 6, 2026 - Evening Session (AI Integration):**
 - ✅ **Edge Functions deployed and working**:
   - `get-weather` - Fetches weather from OpenWeatherMap (imperial units)
   - `analyze-clothing` - AI vision analysis of clothing photos
@@ -125,6 +127,65 @@ Drobe is an AI-powered wardrobe management and outfit planning Progressive Web A
   - Shows reasoning for each outfit suggestion
   - Displays actual wardrobe items with photos
   - Star button saves outfits to database
+
+**March 8, 2026 - UX Polish & Refinements:**
+- ✅ **Authentication flow simplified**:
+  - Removed splash screen landing page
+  - Default page is now Sign In screen with Sign Up option
+  - Email verification step disabled in Supabase
+- ✅ **Loading screen updates**:
+  - Replaced hanger image with DrobeLogoMini spinning animation
+  - Added spin-pause animation (2s cycle)
+  - Removed "This may take 5-10 seconds" text
+  - Updated favicon to use DrobeLogoMini
+- ✅ **Storage cleanup on delete**:
+  - Delete item now removes both photo and thumbnail from Supabase storage
+  - Extracts storage paths from URLs and removes files
+- ✅ **Mobile layout fixes**:
+  - Fixed Auth screen shifting up on mobile
+  - Changed to fixed positioning with dynamic viewport height (100dvh)
+  - Removed unnecessary viewport offset from auth screen
+- ✅ **Multiple image uploads**:
+  - Upload dialog now accepts multiple images at once
+  - All files processed in parallel with Promise.all
+  - UI text changed to plural ("Add Items")
+  - Individual error tracking for failed uploads
+- ✅ **Claude API logging**:
+  - Added comprehensive console.log statements to edge functions
+  - Logs image URLs, prompts, request bodies, and full responses
+  - Helps with debugging and monitoring AI behavior
+- ✅ **Worn count feature removed**:
+  - Removed "×0" badge from grid view
+  - Removed "Worn X×" text from list view and item detail modal
+- ✅ **Upload dialog removed**:
+  - Removed modal dialog for Take Photo / Choose from Gallery
+  - Add button now directly triggers file input (iPhone shows native options)
+  - Simplified UI by ~75 lines of code
+- ✅ **Favoriting feature fixed**:
+  - Changed OutfitContext.saveOutfit to return {success, outfitId}
+  - AIScreen now tracks actual outfit IDs from database
+  - Star button saves outfit, gets ID, then toggles favorite
+  - UI checks actual outfit.is_favorite from context
+- ✅ **Wardrobe Clothes/Outfits tabs**:
+  - Replaced search bar with tab switcher (Clothes | Outfits)
+  - Clothes tab shows existing wardrobe functionality
+  - Outfits tab shows grid of favorite outfits
+  - Outfit cards display 2x2 mini grid of first 4 items
+  - Added outfit detail modal with unfavorite button
+  - Category tabs and grid/list toggle only show on Clothes tab
+- ✅ **Top spacing reduction**:
+  - Reduced space above Drobe logo from 44px to 16px
+  - Applied across all main screens for consistency
+- ✅ **AI outfit cards simplified**:
+  - Removed weather badge from each outfit card
+  - Removed AI reasoning text paragraph
+  - Removed "Wear This" / "Try This Instead" buttons
+  - Moved favorite star to bottom as "Add to Outfits" button
+  - Button shows "Added to Outfits" when favorited
+  - Cleaner, more focused card design
+- ✅ **Outfit detail modal simplified**:
+  - Removed AI reasoning description from outfit detail view
+  - Modal now only shows outfit name, occasion, items list, and unfavorite button
 
 ## Technical Stack
 
@@ -350,6 +411,7 @@ All tables have Row Level Security (RLS) policies to ensure users can only acces
 
 - **Day 1** (Mar 5): Setup, services, contexts, auth ✅
 - **Day 2** (Mar 6): Edge Functions, UI polish, mobile viewport fixes, Vercel deployment, **AI Integration** ✅
+- **Day 3** (Mar 8): UX polish, authentication simplification, wardrobe tabs, outfit management, UI refinements ✅
 - **Status**: **MVP COMPLETE** 🎉
 
 ---

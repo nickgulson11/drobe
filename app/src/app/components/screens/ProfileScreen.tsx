@@ -3,6 +3,7 @@ import logoImg from "../../../assets/logo.png";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useWardrobe } from "../../../contexts/WardrobeContext";
 import { useOutfits } from "../../../contexts/OutfitContext";
+import { useViewportOffset } from "../../../hooks/useViewportOffset";
 
 const stylePrefs = ["Minimal", "Smart Casual", "Neutral Tones", "Structured", "Relaxed Fit"];
 
@@ -20,6 +21,7 @@ export function ProfileScreen() {
   const { user, profile } = useAuth();
   const { items } = useWardrobe();
   const { outfits } = useOutfits();
+  const bottomOffset = useViewportOffset();
 
   // Calculate real stats
   const itemCount = items.length;
@@ -56,7 +58,7 @@ export function ProfileScreen() {
     >
       <div style={{ height: 16 }} />
 
-      <div className="flex-1 overflow-y-auto" style={{ paddingBottom: 100 }}>
+      <div className="flex-1 overflow-y-auto" style={{ paddingBottom: bottomOffset + 100 }}>
         {/* Header */}
         <div className="px-6 py-3">
           <img src={logoImg} alt="Drobe" style={{ height: 58, width: "auto", marginBottom: 16 }} />
