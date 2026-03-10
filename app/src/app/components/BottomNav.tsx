@@ -31,15 +31,15 @@ const navItems = [
     ),
   },
   {
-    id: "planner",
-    label: "Planner",
+    id: "lookbook",
+    label: "Lookbook",
     icon: (active: boolean) => (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <rect x="3" y="4" width="16" height="15" rx="2" stroke={active ? "#1A1A1A" : "#C4B8AA"} strokeWidth="1.5" fill={active ? "#1A1A1A" : "none"} />
-        <path d="M7 2V6M15 2V6M3 9H19" stroke={active ? "#1A1A1A" : "#C4B8AA"} strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx="7.5" cy="13" r="0.8" fill={active ? "#fff" : "#C4B8AA"} />
-        <circle cx="11" cy="13" r="0.8" fill={active ? "#C9A96E" : "#C4B8AA"} />
-        <circle cx="14.5" cy="13" r="0.8" fill={active ? "#fff" : "#C4B8AA"} />
+        <rect x="3" y="2" width="16" height="18" rx="1.5" stroke={active ? "#1A1A1A" : "#C4B8AA"} strokeWidth="1.5" fill="none" />
+        <rect x="6" y="5" width="10" height="6" rx="0.5" fill={active ? "#C9A96E" : "#C4B8AA"} />
+        <line x1="6" y1="13" x2="16" y2="13" stroke={active ? "#1A1A1A" : "#C4B8AA"} strokeWidth="1.2" strokeLinecap="round" />
+        <line x1="6" y1="15.5" x2="13" y2="15.5" stroke={active ? "#1A1A1A" : "#C4B8AA"} strokeWidth="1" strokeLinecap="round" />
+        <line x1="6" y1="17.5" x2="14" y2="17.5" stroke={active ? "#1A1A1A" : "#C4B8AA"} strokeWidth="1" strokeLinecap="round" />
       </svg>
     ),
   },

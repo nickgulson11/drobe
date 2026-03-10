@@ -75,8 +75,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return false;
     const result = await AuthService.updateProfile(user.id, updates);
-    if (result.success && profile) {
-      setProfile({ ...profile, ...updates });
+    if (result.success) {
+      // Refetch the profile to ensure we have the latest data
+      const updatedProfile = await AuthService.getProfile(user.id);
+      setProfile(updatedProfile);
     }
     return result.success;
   };

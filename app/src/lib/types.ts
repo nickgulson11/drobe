@@ -1,10 +1,17 @@
+export interface UserPreferences {
+  styles?: string[]; // e.g., ['Minimalist', 'Streetwear']
+  colors?: string[]; // e.g., ['Colorful', 'Earthy', 'Dark']
+  gender?: 'male' | 'female' | null;
+  age?: number | null;
+}
+
 export interface Profile {
   id: string;
   created_at: string;
   updated_at: string;
   display_name: string | null;
   location: string | null;
-  style_preferences: Record<string, any>;
+  style_preferences: UserPreferences | Record<string, any>;
 }
 
 export interface WardrobeItem {

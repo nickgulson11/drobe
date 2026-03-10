@@ -2,19 +2,34 @@ import { useState } from "react";
 import { AuthScreen } from "./components/screens/AuthScreen";
 import { WardrobeScreen } from "./components/screens/WardrobeScreen";
 import { AIScreen } from "./components/screens/AIScreen";
-import { OutfitPlannerScreen } from "./components/screens/OutfitPlannerScreen";
+import { LookbookScreen } from "./components/screens/LookbookScreen";
 import { ProfileScreen } from "./components/screens/ProfileScreen";
+import { PreferencesScreen } from "./components/screens/PreferencesScreen";
 import { BottomNav } from "./components/BottomNav";
 import { useAuth } from "../contexts/AuthContext";
 import logoMini from "../assets/DrobeLogoMini.png";
+import type { UserPreferences } from "../lib/types";
 
 export default function App() {
-  const { user, isLoading } = useAuth();
+  const { user, profile, isLoading, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("ai");
 
   const handleNavigate = (screen: string) => {
     setActiveTab(screen);
   };
+
+  const handlePreferencesComplete = async (preferences: UserPreferences, name?: string) => {
+    const updates: any = { style_preferences: preferences };
+    if (name) {
+      updates.display_name = name;
+    }
+    await updateProfile(updates);
+    // After completing onboarding, navigate to wardrobe
+    setActiveTab("wardrobe");
+  };
+
+  // Check if user needs to complete preferences (new user onboarding)
+  const needsPreferences = user && profile && (!profile.style_preferences || Object.keys(profile.style_preferences).length === 0);
 
   if (isLoading) {
     return (
@@ -59,6 +74,11 @@ export default function App() {
     return <AuthScreen onSuccess={() => {}} />;
   }
 
+  // Show preferences screen if user hasn't set preferences yet
+  if (needsPreferences) {
+    return <PreferencesScreen onComplete={handlePreferencesComplete} isOnboarding={true} />;
+  }
+
   // Show main app if logged in
   return (
     <div
@@ -72,7 +92,7 @@ export default function App() {
         <div className="flex-1 overflow-hidden">
           {activeTab === "ai" && <AIScreen onNavigate={handleNavigate} />}
           {activeTab === "wardrobe" && <WardrobeScreen onNavigate={handleNavigate} />}
-          {activeTab === "planner" && <OutfitPlannerScreen onNavigate={handleNavigate} />}
+          {activeTab === "lookbook" && <LookbookScreen onNavigate={handleNavigate} />}
           {activeTab === "profile" && <ProfileScreen />}
         </div>
         <BottomNav active={activeTab} onNavigate={handleNavigate} />

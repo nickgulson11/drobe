@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import logoImg from "../../../assets/logo.png";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useWardrobe } from "../../../contexts/WardrobeContext";
 import { useOutfits } from "../../../contexts/OutfitContext";
 import { useViewportOffset } from "../../../hooks/useViewportOffset";
-
-const stylePrefs = ["Minimal", "Smart Casual", "Neutral Tones", "Structured", "Relaxed Fit"];
+import { PreferencesScreen } from "./PreferencesScreen";
+import type { UserPreferences } from "../../../lib/types";
 
 const activityData = [
   { day: "M", height: 60 },
@@ -18,14 +18,23 @@ const activityData = [
 ];
 
 export function ProfileScreen() {
-  const { user, profile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
   const { items } = useWardrobe();
   const { outfits } = useOutfits();
   const bottomOffset = useViewportOffset();
+  const [showPreferences, setShowPreferences] = useState(false);
+
+  const handlePreferencesComplete = async (preferences: UserPreferences, name?: string) => {
+    const updates: any = { style_preferences: preferences };
+    if (name) {
+      updates.display_name = name;
+    }
+    await updateProfile(updates);
+    setShowPreferences(false);
+  };
 
   // Calculate real stats
   const itemCount = items.length;
-  const outfitCount = outfits.length;
   const savedCount = outfits.filter(o => o.is_favorite).length;
 
   // Get user initials for avatar
@@ -48,9 +57,32 @@ export function ProfileScreen() {
 
   const stats = [
     { label: "Items", value: itemCount.toString() },
-    { label: "Outfits", value: outfitCount.toString() },
-    { label: "Saved", value: savedCount.toString() },
+    { label: "Outfits", value: savedCount.toString() },
   ];
+
+  // Get user preferences
+  const userPreferences = profile?.style_preferences as UserPreferences || {};
+  const stylePrefs = userPreferences.styles || [];
+
+  // Handle colors being either string (old format) or array (new format)
+  const colorPrefs = Array.isArray(userPreferences.colors)
+    ? userPreferences.colors
+    : userPreferences.colors
+      ? [userPreferences.colors]
+      : [];
+
+  // If showing preferences modal
+  if (showPreferences) {
+    return (
+      <PreferencesScreen
+        onComplete={handlePreferencesComplete}
+        initialPreferences={userPreferences}
+        initialName={profile?.display_name || ''}
+        isOnboarding={false}
+      />
+    );
+  }
+
   return (
     <div
       className="w-full h-full flex flex-col overflow-hidden"
@@ -64,55 +96,55 @@ export function ProfileScreen() {
           <img src={logoImg} alt="Drobe" style={{ height: 58, width: "auto", marginBottom: 16 }} />
 
           {/* Profile info section */}
-          <div className="flex items-start justify-between mb-5">
-            <div className="flex items-center gap-4">
-              {/* Avatar */}
-              <div
-                style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 16,
-                  background: "linear-gradient(135deg, #C9A96E, #a07840)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <span style={{ color: "#fff", fontSize: 24, fontWeight: 600, fontFamily: "'Playfair Display', serif" }}>
-                  {getInitials(profile?.display_name)}
-                </span>
-              </div>
-
-              {/* Name and date */}
-              <div>
-                <h1 style={{ fontSize: 20, fontWeight: 600, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", marginBottom: 4 }}>
-                  {displayName}
-                </h1>
-                <p style={{ fontSize: 13, color: "#A0917E", fontWeight: 400 }}>
-                  Member since {getMemberSince()}
-                </p>
-              </div>
-            </div>
-
-            {/* Edit button */}
-            <button
+          <div className="flex items-center gap-4 mb-5">
+            {/* Avatar */}
+            <div
               style={{
-                background: "#fff",
-                border: "1px solid #E8E3DC",
-                borderRadius: 12,
-                padding: "8px 16px",
-                color: "#1A1A1A",
-                fontSize: 13,
-                fontWeight: 600,
+                width: 64,
+                height: 64,
+                borderRadius: 16,
+                background: "linear-gradient(135deg, #C9A96E, #a07840)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
               }}
             >
-              Edit
-            </button>
+              <span style={{ color: "#fff", fontSize: 24, fontWeight: 600, fontFamily: "'Playfair Display', serif" }}>
+                {getInitials(profile?.display_name)}
+              </span>
+            </div>
+
+            {/* Name and info */}
+            <div>
+              <h1 style={{ fontSize: 20, fontWeight: 700, color: "#1A1A1A", fontFamily: "'Playfair Display', serif", marginBottom: 2 }}>
+                {displayName}
+              </h1>
+              <p style={{ fontSize: 12, color: "#A0917E", fontWeight: 400, marginBottom: 4 }}>
+                {user?.email}
+              </p>
+              {(userPreferences.gender || userPreferences.age) && (
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  {userPreferences.gender && (
+                    <span style={{ fontSize: 11, color: "#6B5E4E", fontWeight: 500 }}>
+                      {userPreferences.gender.charAt(0).toUpperCase() + userPreferences.gender.slice(1)}
+                    </span>
+                  )}
+                  {userPreferences.age && (
+                    <>
+                      {userPreferences.gender && <span style={{ fontSize: 11, color: "#C4B8AA" }}>•</span>}
+                      <span style={{ fontSize: 11, color: "#6B5E4E", fontWeight: 500 }}>
+                        Age {userPreferences.age}
+                      </span>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Stats cards */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="flex gap-3 justify-center">
             {stats.map((s) => (
               <div
                 key={s.label}
@@ -120,7 +152,7 @@ export function ProfileScreen() {
                   textAlign: "center",
                   background: "#fff",
                   borderRadius: 16,
-                  padding: "20px 12px",
+                  padding: "20px 40px",
                   border: "1px solid #E8E3DC"
                 }}
               >
@@ -136,63 +168,81 @@ export function ProfileScreen() {
         </div>
 
         {/* Style Profile */}
-        <div className="mx-5 mt-4" style={{ background: "#fff", borderRadius: 20, padding: "18px 16px" }}>
-          <div className="flex items-center justify-between mb-3">
-            <p style={{ fontSize: 13, fontWeight: 600, color: "#1A1A1A" }}>Style Profile</p>
-            <span style={{ fontSize: 11, color: "#C9A96E", fontWeight: 600 }}>Edit preferences</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {stylePrefs.map((pref) => (
-              <span
-                key={pref}
-                style={{
-                  background: "#F7F5F2",
-                  borderRadius: 100,
-                  padding: "6px 14px",
-                  fontSize: 12,
-                  color: "#6B5E4E",
-                  border: "1px solid #E8E3DC",
-                }}
-              >
-                {pref}
-              </span>
-            ))}
-            <span
+        <div className="mx-5 mt-4" style={{ background: "#fff", borderRadius: 20, padding: "20px 18px" }}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 style={{ fontSize: 15, fontWeight: 600, color: "#1A1A1A" }}>Style Profile</h2>
+            <button
+              onClick={() => setShowPreferences(true)}
               style={{
-                background: "#1A1A1A",
-                borderRadius: 100,
-                padding: "6px 14px",
                 fontSize: 12,
                 color: "#C9A96E",
+                fontWeight: 600,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                padding: "4px 8px",
               }}
             >
-              + Add
-            </span>
+              Edit
+            </button>
           </div>
-        </div>
 
-        {/* Wardrobe activity */}
-        <div className="mx-5 mt-4" style={{ background: "#fff", borderRadius: 20, padding: "18px 16px" }}>
-          <div className="flex items-center justify-between mb-4">
-            <p style={{ fontSize: 13, fontWeight: 600, color: "#1A1A1A" }}>Wear Activity</p>
-            <span style={{ fontSize: 11, color: "#A0917E" }}>This week</span>
+          {/* Style Preferences */}
+          <div style={{ marginBottom: colorPrefs.length > 0 ? 16 : 0 }}>
+            <p style={{ fontSize: 10, color: "#A0917E", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              Style
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {stylePrefs.length > 0 ? (
+                stylePrefs.map((pref) => (
+                  <span
+                    key={pref}
+                    style={{
+                      background: "#F7F5F2",
+                      borderRadius: 8,
+                      padding: "6px 12px",
+                      fontSize: 12,
+                      color: "#6B5E4E",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {pref}
+                  </span>
+                ))
+              ) : (
+                <p style={{ fontSize: 13, color: "#A0917E", fontStyle: "italic" }}>
+                  Not set
+                </p>
+              )}
+            </div>
           </div>
-          <div className="flex items-end justify-between gap-1" style={{ height: 80 }}>
-            {activityData.map((d, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div
-                  style={{
-                    width: "100%",
-                    height: `${d.height}%`,
-                    background: d.height === 100 ? "linear-gradient(180deg, #C9A96E, #a07840)" : "#F0EDE8",
-                    borderRadius: 6,
-                    transition: "all 0.3s",
-                  }}
-                />
-                <p style={{ fontSize: 10, color: "#A0917E" }}>{d.day}</p>
+
+          {/* Color Palettes */}
+          {colorPrefs.length > 0 && (
+            <div>
+              <p style={{ fontSize: 10, color: "#A0917E", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                Color Palettes
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {colorPrefs.map((color) => (
+                  <span
+                    key={color}
+                    style={{
+                      background: "linear-gradient(135deg, #FFF9ED, #FFF5E1)",
+                      borderRadius: 8,
+                      padding: "6px 12px",
+                      fontSize: 12,
+                      color: "#8B7355",
+                      fontWeight: 500,
+                      display: "inline-block",
+                    }}
+                  >
+                    {color}
+                  </span>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Settings */}
