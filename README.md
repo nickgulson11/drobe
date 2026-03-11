@@ -85,27 +85,9 @@ This working proof-of-concept demonstrates:
 
 ### Architecture Diagram
 
-See **[Docs/DrobeArchitectureDiagram.pdf](./Docs/DrobeArchitectureDiagram.pdf)** for the complete system architecture diagram.
+![Drobe Architecture](./Docs/DrobeArchitectureDiagram.pdf)
 
-### High-Level Flow
-
-```
-User Upload Photo → Client Resize/Optimize → Supabase Storage → Edge Function
-                                                                      ↓
-                                                            Claude Vision API
-                                                                      ↓
-                                                         Structured Metadata
-                                                                      ↓
-                                                          PostgreSQL Database
-
-User Requests Outfit → Fetch Wardrobe + Weather → Edge Function
-                                                         ↓
-                                              Claude 3.5 Sonnet API
-                                                         ↓
-                                               2-3 Outfit Suggestions
-                                                         ↓
-                                                    Display to User
-```
+**[View Full Architecture Diagram (PDF)](./Docs/DrobeArchitectureDiagram.pdf)**
 
 ### Key Components
 
