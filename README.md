@@ -6,29 +6,7 @@
 
 An AI-powered Progressive Web App that helps you organize your wardrobe and receive personalized outfit recommendations using Claude Vision AI and weather-aware styling.
 
-**Live Prototype**: [drobe-eight.vercel.app](https://drobe-eight.vercel.app)
-
----
-
-## 📋 Table of Contents
-
-- [Product Overview](#-product-overview)
-- [Demo Video](#-demo-video)
-- [System Architecture](#-system-architecture)
-- [AI Model Card](#-ai-model-card)
-- [Features](#-features)
-- [Technology Stack](#-technology-stack)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Environment Configuration](#environment-configuration)
-  - [Running the Demo](#running-the-demo)
-- [Usage Guide](#-usage-guide)
-- [Expected Outputs](#-expected-outputs)
-- [Project Structure](#-project-structure)
-- [Deployment](#-deployment)
-- [Troubleshooting](#-troubleshooting)
-- [Team & Contact](#-team--contact)
+**Live Prototype**: [drobe-eight.vercel.app](https://drobe-eight.vercel.app) (Mobile-optimized)
 
 ---
 
@@ -60,21 +38,7 @@ By combining AI-powered clothing analysis with intelligent outfit recommendation
 
 ## 🏗️ System Architecture
 
-### Architecture Diagram
-
 ![Drobe Architecture](./docs/DrobeArchitectureDiagram.png)
-
-### Key Components
-
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **Frontend** | React 18 + TypeScript + Vite | Interactive UI, state management |
-| **Backend** | Supabase (PostgreSQL + Storage) | Database, authentication, file storage |
-| **AI - Vision** | Claude 3.5 Sonnet (Vision) | Clothing categorization |
-| **AI - Recommendations** | Claude 3.5 Sonnet (Text) | Outfit suggestions |
-| **Weather** | OpenWeatherMap API | Real-time weather data |
-| **Serverless** | Supabase Edge Functions | Hide API keys, server-side logic |
-| **Image Processing** | Canvas API (client-side) | Resize, compress, WebP conversion |
 
 ---
 
@@ -97,84 +61,6 @@ We use **two AI models** in Drobe:
 - Training data and limitations
 - Performance evaluation and metrics
 - Bias considerations and ethical deployment
-
----
-
-## ✨ Features
-
-### Core Features (Implemented)
-
-- ✅ **Smart Photo Upload**
-  - Take photo or choose from gallery
-  - Client-side optimization (800x800 + 300x300 thumbnail, WebP format)
-  - Automatic AI categorization
-
-- ✅ **AI Wardrobe Analysis**
-  - Automatic category detection (tops, bottoms, outerwear, shoes, accessories)
-  - Color extraction
-  - Formality classification (casual, smart casual, formal)
-  - Seasonal appropriateness
-
-- ✅ **Intelligent Outfit Suggestions**
-  - Natural language occasion input ("What should I wear to a wedding?")
-  - Weather-aware recommendations
-  - 2-3 outfit combinations with styling reasoning
-  - Save favorites to your collection
-
-- ✅ **User Personalization**
-  - Demographic preferences (gender, age)
-  - Style preferences (minimalist, streetwear, classic, bohemian, sporty, preppy, edgy, casual)
-  - Color palette preferences (colorful, earthy, dark, neutral, bright)
-  - Onboarding flow for new users
-
-- ✅ **Wardrobe Management**
-  - Grid and list view modes
-  - Filter by category
-  - Separate tabs for Clothes and Favorite Outfits
-  - Delete items from wardrobe
-
-- ✅ **Lookbook Inspiration**
-  - Curated "Look of the Day" content
-  - Sponsored outfit inspiration
-  - Links to sustainable fashion brands
-
-- ✅ **User Profile**
-  - View and edit preferences
-  - Wardrobe statistics (total items, favorite outfits)
-  - Account management
-
-### Security & Privacy
-
-- 🔐 Email/password authentication
-- 🔐 Row Level Security (RLS) - users only access their own data
-- 🔐 API keys hidden in Edge Functions (never exposed to client)
-- 🔐 HTTPS enforced on all endpoints
-
----
-
-## 🛠️ Technology Stack
-
-### Frontend
-- **React 18**: Modern component-based UI
-- **TypeScript**: Type-safe development
-- **Vite**: Fast build tool and dev server
-- **Tailwind CSS**: Utility-first styling
-- **Context API**: Global state management
-
-### Backend (Supabase)
-- **PostgreSQL**: Relational database with RLS
-- **Supabase Auth**: Email/password authentication
-- **Supabase Storage**: Object storage for photos
-- **Edge Functions**: Serverless API (Deno runtime)
-
-### AI & External APIs
-- **Anthropic Claude API**: Vision and text generation
-- **OpenWeatherMap API**: Weather data
-
-### Development Tools
-- **npm**: Package manager
-- **Git**: Version control
-- **Vercel**: Deployment platform
 
 ---
 
