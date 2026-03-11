@@ -85,7 +85,7 @@ This working proof-of-concept demonstrates:
 
 ### Architecture Diagram
 
-![Drobe Architecture](./Docs/DrobeArchitectureDiagram.png)
+![Drobe Architecture](./docs/DrobeArchitectureDiagram.png)
 
 ### Key Components
 
