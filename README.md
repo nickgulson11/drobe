@@ -25,7 +25,7 @@ By combining AI-powered clothing analysis with intelligent outfit recommendation
 
 ## 🎥 Demo Video
 
-**[Link to Product Demo Video]** *(Upload your video to YouTube/Vimeo and add link here)*
+**[Watch Product Demo Video](https://drive.google.com/file/d/1YIoevPC0YStZl2ROj31D-dgs9hfJuJxP/view?usp=sharing)**
 
 *1-2 minute walkthrough showing:*
 1. User requesting outfit suggestions for an occasion
