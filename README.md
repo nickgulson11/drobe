@@ -67,158 +67,33 @@ We use **two AI models** in Drobe:
 ## 🚀 Getting Started
 
 ### Prerequisites
+- Node.js v18+
+- Supabase account ([supabase.com](https://supabase.com))
+- Anthropic API key ([console.anthropic.com](https://console.anthropic.com))
+- OpenWeatherMap API key ([openweathermap.org](https://openweathermap.org/api))
 
-Before running this demo, you need:
+### Quick Setup
 
-1. **Node.js** (v18 or higher)
-   ```bash
-   node --version  # Should be v18+
-   ```
+```bash
+# 1. Clone and install
+git clone <repository-url>
+cd drobe/app
+npm install
 
-2. **npm** (comes with Node.js)
-   ```bash
-   npm --version
-   ```
+# 2. Configure environment
+cp .env.example .env.local
+# Edit .env.local with your Supabase URL and anon key
 
-3. **Supabase Account** (free tier)
-   - Sign up at [supabase.com](https://supabase.com)
-   - Create a new project
-   - Note your `Project URL` and `anon/public` API key
+# 3. Run the app
+npm run dev
+# Open http://localhost:5173
+```
 
-4. **Anthropic API Key** (for AI features)
-   - Sign up at [console.anthropic.com](https://console.anthropic.com)
-   - Generate an API key
-   - **Note**: Free trial available, paid tier ~$5-10/month for testing
+### Database & AI Setup
+1. **Database**: Run SQL schema from `Docs/plans/2026-03-05-drobe-mvp-implementation.md` (lines 74-246) in Supabase SQL Editor
+2. **Edge Functions**: Deploy 3 functions from `Docs/EDGE_FUNCTIONS_SETUP.md` to Supabase with API keys
 
-5. **OpenWeatherMap API Key** (for weather)
-   - Sign up at [openweathermap.org](https://openweathermap.org/api)
-   - Free tier: 1000 calls/day
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd drobe
-   ```
-
-2. **Navigate to the app directory**
-   ```bash
-   cd app
-   ```
-
-3. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-   This will install all required packages (~180 dependencies). Should take 1-2 minutes.
-
-### Environment Configuration
-
-1. **Copy the environment template**
-   ```bash
-   cp .env.example .env.local
-   ```
-
-2. **Edit `.env.local`** with your credentials:
-   ```bash
-   # Required for app to run
-   VITE_SUPABASE_URL=https://your-project.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key-here
-   ```
-
-   **Where to find these values**:
-   - Go to your Supabase project dashboard
-   - Click **Settings** → **API**
-   - Copy `Project URL` → `VITE_SUPABASE_URL`
-   - Copy `anon` `public` key → `VITE_SUPABASE_ANON_KEY`
-
-3. **Set up Supabase database** (one-time setup)
-
-   Go to your Supabase dashboard → **SQL Editor** → paste and run:
-
-   ```sql
-   -- See Docs/plans/2026-03-05-drobe-mvp-implementation.md lines 74-218
-   -- Or visit Supabase Dashboard → SQL Editor and run the setup script
-   ```
-
-   **Quick setup**: The full SQL schema is in `Docs/plans/2026-03-05-drobe-mvp-implementation.md` (Task 2, lines 74-246).
-
-   This creates:
-   - `profiles` table (user data)
-   - `wardrobe_items` table (clothing)
-   - `outfits` table (saved combinations)
-   - `planned_outfits` table (future feature)
-   - Row Level Security policies
-   - `wardrobe-photos` storage bucket
-
-4. **Deploy Edge Functions** (for AI features)
-
-   **Option A: Use Supabase Dashboard** (recommended for demo)
-   - Go to **Edge Functions** → **New Function**
-   - Create 3 functions: `analyze-clothing`, `suggest-outfits`, `get-weather`
-   - Paste code from `Docs/EDGE_FUNCTIONS_SETUP.md`
-   - Add environment variables:
-     - `ANTHROPIC_API_KEY`: Your Anthropic API key
-     - `OPENWEATHER_API_KEY`: Your OpenWeatherMap key
-
-   **Option B: Use Supabase CLI** (for developers)
-   ```bash
-   # Install Supabase CLI
-   npm install -g supabase
-
-   # Login
-   supabase login
-
-   # Link to your project
-   supabase link --project-ref your-project-ref
-
-   # Deploy functions
-   supabase functions deploy analyze-clothing
-   supabase functions deploy suggest-outfits
-   supabase functions deploy get-weather
-
-   # Set secrets
-   supabase secrets set ANTHROPIC_API_KEY=your-key
-   supabase secrets set OPENWEATHER_API_KEY=your-key
-   ```
-
-### Running the Demo
-
-1. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-2. **Open your browser**
-   ```
-   http://localhost:5173
-   ```
-
-3. **Create an account**
-   - Click "Sign Up"
-   - Enter email and password
-   - Complete preferences onboarding (name, gender, age, style preferences)
-
-4. **Upload your first clothing item**
-   - Navigate to "Wardrobe" tab
-   - Click "+ Add" button
-   - Take a photo or upload from gallery
-   - Wait ~3-5 seconds for AI analysis
-   - Item appears with automatic categorization
-
-5. **Get outfit suggestions**
-   - Navigate to "Style AI" tab
-   - Enter an occasion (e.g., "job interview")
-   - AI generates 2-3 outfit suggestions
-   - Click "Add to Outfits" to save favorites
-
-6. **View saved outfits**
-   - Navigate to "Wardrobe" → "Outfits" tab
-   - See all your favorite outfit combinations
-
-**Expected startup time**: 5-10 seconds for Vite dev server to start.
+See full setup details in `Docs/` folder.
 
 ---
 
@@ -307,80 +182,19 @@ Before running this demo, you need:
 
 ## 🎯 Expected Outputs
 
-### 1. After Uploading a Clothing Item
+### Clothing Upload
+Upload a photo → AI analyzes and returns: category (tops, bottoms, shoes, etc.), colors, formality level (casual/smart casual/formal), seasonal tags, and style notes. Item appears in wardrobe grid with category badge and tags (~3-5 seconds).
 
-**Input**: Photo of a navy blue t-shirt
+### Outfit Suggestions
+Enter occasion (e.g., "job interview") → AI generates 2-3 outfit combinations with:
+- Creative outfit name
+- Item combinations from your wardrobe
+- Styling reasoning (why this works)
+- Weather considerations
+- Option to save to favorites (~4-8 seconds)
 
-**Expected Output** (in Wardrobe):
-```json
-{
-  "category": "tops",
-  "subcategory": "t-shirt",
-  "colors": ["navy blue"],
-  "formality": "casual",
-  "seasons": ["spring", "summer", "fall", "all-season"],
-  "patterns": ["solid"],
-  "style_notes": "Classic navy crew neck t-shirt, versatile wardrobe staple"
-}
-```
-
-**Visual**: Item appears in Wardrobe grid with "Tops" category badge, "Casual" formality tag.
-
-### 2. After Requesting Outfit Suggestions
-
-**Input**:
-- Occasion: "job interview"
-- Wardrobe: 15 items (mix of casual and formal)
-- Weather: 65°F, Partly Cloudy
-- User: Male, 28, Minimalist style, Neutral colors
-
-**Expected Output** (2-3 suggestions):
-
-**Suggestion 1: "Sharp Professional"**
-- Items: White dress shirt + Navy suit pants + Brown leather shoes + Brown belt
-- Reasoning: "This classic combination projects confidence and professionalism. The neutral color palette aligns with your minimalist style, and the lightweight fabric is perfect for 65°F weather."
-- Occasion: Job Interview
-- Weather: 65°F, Partly Cloudy
-
-**Suggestion 2: "Modern Business Casual"**
-- Items: Light blue button-down + Charcoal chinos + Black loafers
-- Reasoning: "A slightly less formal but equally polished look. The light blue adds subtle personality while maintaining professionalism. Perfect for startup or creative industry interviews."
-
-**Visual**: Cards showing outfit name, 2x2 grid of item photos, reasoning text, "Add to Outfits" button.
-
-### 3. After Saving a Favorite Outfit
-
-**Action**: User clicks "Add to Outfits" on Suggestion 1
-
-**Expected**:
-- Button changes to "Added to Outfits" with checkmark
-- Outfit saved to database with:
-  - Name: "Sharp Professional"
-  - Occasion: "job interview"
-  - Item IDs: [id1, id2, id3, id4]
-  - AI reasoning
-  - Weather snapshot
-  - `is_favorite = true`
-
-**Visual in Wardrobe > Outfits Tab**:
-- Card showing "Sharp Professional"
-- 2x2 mini grid of first 4 items
-- Tap to expand full detail modal
-
-### 4. Error Handling
-
-**Scenario**: User tries to get outfit suggestions with only 2 items in wardrobe
-
-**Expected**:
-- AI still attempts to generate suggestions
-- May return: "Your wardrobe has limited items. Here's one possible combination, but consider adding more pieces for better variety."
-- Suggests incomplete outfit or recommends shopping
-
-**Scenario**: API key is invalid or Edge Function fails
-
-**Expected**:
-- Error message: "Unable to connect to AI service. Please try again later."
-- App remains functional for non-AI features (browsing wardrobe, viewing saved outfits)
+### Saved Outfits
+View saved outfits in Wardrobe → Outfits tab. Each shows outfit name, 2x2 item grid, and occasion. Tap to see full details and AI reasoning.
 
 ---
 
