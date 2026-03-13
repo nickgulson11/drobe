@@ -1,7 +1,5 @@
 # Drobe System Architecture
 
-## Architecture Diagram
-
 ![Drobe Architecture](./docs/DrobeArchitectureDiagram.png)
 
 ## Tech Stack
@@ -50,17 +48,6 @@
 - Edge Functions: Supabase
 - CDN: Automatic (Vercel + Supabase)
 
-
-## Key Design Decisions
-
-| Decision | Rationale |
-|----------|-----------|
-| React + TypeScript | Type safety, PWA support, large ecosystem |
-| Supabase | PostgreSQL flexibility, built-in RLS, auth, and storage |
-| Claude Vision | Best-in-class multimodal AI for clothing analysis |
-| Edge Functions | Hide API keys, server-side AI calls |
-| Client-side image processing | Reduces bandwidth and storage costs by ~90% |
-| Context API | Simpler than Redux for MVP scope |
 
 ---
 

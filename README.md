@@ -42,6 +42,8 @@ By combining AI-powered clothing analysis with intelligent outfit recommendation
 
 ![Drobe Architecture](./docs/DrobeArchitectureDiagram.png)
 
+**For detailed architecture documentation, see [ARCHITECTURE.md](./ARCHITECTURE.md)**
+
 ---
 
 ## 🤖 AI Model Card
